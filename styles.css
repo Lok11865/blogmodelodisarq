@@ -1,0 +1,444 @@
+/* =========================================================================
+   MODELOS DE DISEÑO ARQUITECTÓNICO — Blog académico
+   Análisis de Sistemas II · UMG Guatemala
+   Dirección de arte: "hoja de plano" — retícula, cotas y cajetín de dibujo
+   técnico aplicados a la arquitectura de software.
+   ========================================================================= */
+
+:root{
+  /* ---- Paleta -------------------------------------------------------- */
+  --paper:        #f2f0e8;   /* papel de dibujo */
+  --paper-dim:     #e7e4d7;
+  --ink:          #1c2530;   /* texto principal, casi negro azulado */
+  --ink-soft:     #4a5566;
+  --blueprint:    #10314f;   /* azul de plano, fondo hero/cajetín */
+  --blueprint-2:  #0b2740;
+  --line:         #6fb0d6;   /* líneas de retícula / cian de plano */
+  --line-dim:     rgba(111,176,214,0.28);
+  --accent:       #c97a2b;   /* lápiz de grafito ámbar — sellos, énfasis */
+  --accent-soft:  #e9c391;
+  --ok:           #4c7a63;   /* verde bitácora, para "ventajas" */
+  --warn:         #a24a3d;   /* rojo cota, para "desventajas" */
+  --border:       #c9c4b3;
+
+  --font-display: "Space Grotesk", "Arial Narrow", sans-serif;
+  --font-body:    "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono:    "JetBrains Mono", "Courier New", monospace;
+
+  --maxw: 1180px;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+}
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+
+img,svg{ display:block; max-width:100%; }
+a{ color:var(--blueprint); }
+a:focus-visible, button:focus-visible, .navlink:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+
+.wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+
+/* ---- Fondo de retícula de plano ---------------------------------------- */
+.blueprint-grid{
+  background-image:
+    linear-gradient(var(--line-dim) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-dim) 1px, transparent 1px);
+  background-size:34px 34px;
+}
+.paper-grid{
+  background-image:
+    linear-gradient(rgba(28,37,48,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28,37,48,0.05) 1px, transparent 1px);
+  background-size:28px 28px;
+}
+
+/* =========================================================================
+   NAV
+   ========================================================================= */
+.site-nav{
+  position:sticky; top:0; z-index:50;
+  background:rgba(242,240,232,0.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--border);
+}
+.site-nav .wrap{
+  display:flex; align-items:center; justify-content:space-between;
+  height:64px;
+}
+.brand{
+  display:flex; align-items:center; gap:10px;
+  font-family:var(--font-mono);
+  font-weight:600; letter-spacing:.02em;
+  color:var(--ink); text-decoration:none;
+  font-size:14px;
+}
+.brand .brand-mark{
+  width:26px; height:26px; flex:none;
+  border:1.5px solid var(--ink);
+  display:grid; place-items:center;
+  background:var(--paper);
+}
+.brand .brand-mark svg{ width:16px; height:16px; }
+.brand small{ color:var(--ink-soft); font-weight:400; display:block; font-size:11px; }
+
+.navlinks{ display:flex; gap:26px; list-style:none; margin:0; padding:0; }
+.navlink{
+  font-family:var(--font-mono);
+  font-size:12.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-soft); text-decoration:none;
+  padding:6px 0; border-bottom:2px solid transparent;
+  transition:color .15s ease, border-color .15s ease;
+}
+.navlink:hover, .navlink.active{ color:var(--ink); border-color:var(--accent); }
+
+.nav-toggle{
+  display:none; background:none; border:1.5px solid var(--ink); width:38px; height:34px;
+  cursor:pointer; padding:0; position:relative;
+}
+.nav-toggle span, .nav-toggle span::before, .nav-toggle span::after{
+  content:""; position:absolute; left:8px; right:8px; height:2px; background:var(--ink);
+}
+.nav-toggle span{ top:16px; }
+.nav-toggle span::before{ top:-6px; }
+.nav-toggle span::after{ top:6px; }
+
+@media (max-width:860px){
+  .navlinks{
+    position:absolute; top:64px; left:0; right:0;
+    background:var(--paper); border-bottom:1px solid var(--border);
+    flex-direction:column; gap:0; padding:8px 28px 18px;
+    display:none;
+  }
+  .navlinks.open{ display:flex; }
+  .navlink{ padding:12px 0; border-bottom:1px solid var(--border); width:100%; }
+  .nav-toggle{ display:block; }
+}
+
+/* =========================================================================
+   HERO
+   ========================================================================= */
+.hero{
+  background:
+    radial-gradient(ellipse 900px 500px at 85% -10%, rgba(111,176,214,0.18), transparent 60%),
+    var(--blueprint);
+  color:#eef4f8;
+  position:relative;
+  overflow:hidden;
+  border-bottom:6px solid var(--accent);
+}
+.hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(111,176,214,0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(111,176,214,0.14) 1px, transparent 1px);
+  background-size:36px 36px;
+  pointer-events:none;
+}
+.hero .wrap{
+  position:relative; z-index:1;
+  padding-top:64px; padding-bottom:56px;
+  display:grid; grid-template-columns:1.05fr .95fr; gap:40px; align-items:center;
+}
+@media (max-width:900px){ .hero .wrap{ grid-template-columns:1fr; } }
+
+.eyebrow{
+  font-family:var(--font-mono); font-size:12.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--line);
+  display:flex; align-items:center; gap:10px; margin-bottom:18px;
+}
+.eyebrow::before{ content:""; width:26px; height:1px; background:var(--line); display:inline-block; }
+
+.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(2.3rem,4.6vw,3.6rem);
+  line-height:1.06; letter-spacing:-.01em;
+  margin:0 0 20px;
+  font-weight:600;
+}
+.hero h1 em{ font-style:normal; color:var(--accent-soft); }
+
+.hero p.lead{
+  font-family:var(--font-body); font-size:1.08rem; line-height:1.65;
+  color:#d7e4ec; max-width:52ch; margin:0 0 26px;
+}
+
+.hero-meta{
+  display:flex; flex-wrap:wrap; gap:10px 22px;
+  font-family:var(--font-mono); font-size:12px; letter-spacing:.03em; color:#9fc1d8;
+}
+.hero-meta span strong{ color:#eef4f8; font-weight:600; }
+
+/* Diagrama SVG del hero */
+.hero-diagram{
+  border:1px solid rgba(111,176,214,0.4);
+  background:rgba(11,39,64,0.55);
+  padding:18px;
+  position:relative;
+}
+.hero-diagram .frame-label{
+  position:absolute; top:-11px; left:14px; background:var(--blueprint);
+  padding:0 8px; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
+  color:var(--line); text-transform:uppercase;
+}
+
+/* =========================================================================
+   CAJETÍN — rótulo de plano con los datos generales del curso
+   ========================================================================= */
+.titleblock-section{ background:var(--paper-dim); padding:34px 0 46px; }
+.titleblock{
+  border:1.5px solid var(--ink);
+  background:var(--paper);
+  font-family:var(--font-mono);
+  box-shadow:6px 6px 0 rgba(16,49,79,0.08);
+}
+.titleblock-top{
+  display:grid; grid-template-columns:1.4fr 1fr;
+  border-bottom:1.5px solid var(--ink);
+}
+.titleblock-brand{
+  padding:20px 24px; border-right:1.5px solid var(--ink);
+  display:flex; flex-direction:column; justify-content:center; gap:6px;
+}
+.titleblock-brand .tb-univ{ font-size:11px; letter-spacing:.14em; color:var(--ink-soft); }
+.titleblock-brand .tb-title{
+  font-family:var(--font-display); font-size:1.3rem; color:var(--blueprint); font-weight:600;
+  letter-spacing:-.01em; line-height:1.2;
+}
+.titleblock-stamp{
+  padding:20px 24px; display:flex; align-items:center; justify-content:flex-end; gap:14px;
+}
+.stamp{
+  width:64px; height:64px; border:2px solid var(--accent); border-radius:50%;
+  display:grid; place-items:center; color:var(--accent); flex:none;
+  transform:rotate(-8deg);
+}
+.stamp span{ font-size:9px; letter-spacing:.05em; text-align:center; line-height:1.3; }
+
+.titleblock-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+}
+.tb-cell{
+  border-right:1px solid var(--border);
+  border-top:1px solid var(--border);
+  padding:14px 18px;
+}
+.tb-cell:nth-child(4n){ border-right:none; }
+.tb-cell .tb-k{
+  font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft);
+  margin-bottom:6px;
+}
+.tb-cell .tb-v{ font-size:13.5px; color:var(--ink); font-weight:600; letter-spacing:.01em; }
+@media (max-width:760px){
+  .titleblock-top{ grid-template-columns:1fr; }
+  .titleblock-brand{ border-right:none; border-bottom:1.5px solid var(--ink); }
+  .titleblock-grid{ grid-template-columns:repeat(2,1fr); }
+  .tb-cell:nth-child(2n){ border-right:none; }
+  .tb-cell:nth-child(4n){ border-right:1px solid var(--border); }
+}
+
+/* =========================================================================
+   SECCIONES DE ARTÍCULO
+   ========================================================================= */
+.section{ padding:64px 0; }
+.section + .section{ border-top:1px solid var(--border); }
+.section-head{ max-width:70ch; margin-bottom:38px; }
+.section-num{
+  font-family:var(--font-mono); font-size:12px; color:var(--accent);
+  letter-spacing:.1em; margin-bottom:10px; display:block;
+}
+.section h2{
+  font-family:var(--font-display); font-size:clamp(1.6rem,2.6vw,2.15rem);
+  color:var(--blueprint); margin:0 0 14px; letter-spacing:-.01em; font-weight:600;
+}
+.section .dek{ color:var(--ink-soft); font-size:1.02rem; }
+
+.prose p{ margin:0 0 18px; max-width:74ch; }
+.prose strong{ color:var(--blueprint); }
+.prose h3{
+  font-family:var(--font-display); color:var(--blueprint);
+  font-size:1.15rem; margin:30px 0 10px; font-weight:600;
+}
+
+.callout{
+  border-left:3px solid var(--accent);
+  background:var(--paper-dim);
+  padding:16px 20px; margin:24px 0; max-width:74ch;
+  font-size:.98rem; color:var(--ink-soft);
+}
+.callout strong{ color:var(--ink); }
+
+/* ---- Tarjetas de "estilo arquitectónico" vs "patrón" ---- */
+.definitions{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:30px;
+}
+@media (max-width:820px){ .definitions{ grid-template-columns:1fr; } }
+.def-card{
+  border:1px solid var(--border); background:var(--paper);
+  padding:22px 20px; position:relative;
+}
+.def-card .def-tag{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em;
+  color:var(--accent); text-transform:uppercase; margin-bottom:10px; display:block;
+}
+.def-card h4{
+  font-family:var(--font-display); margin:0 0 8px; font-size:1.05rem; color:var(--blueprint);
+}
+.def-card p{ margin:0; font-size:.94rem; color:var(--ink-soft); }
+
+/* =========================================================================
+   MODELOS — tarjetas tipo "plano" con diagrama SVG
+   ========================================================================= */
+.models-grid{
+  display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:10px;
+}
+@media (max-width:900px){ .models-grid{ grid-template-columns:1fr; } }
+
+.model-card{
+  border:1px solid var(--ink);
+  background:var(--paper);
+  display:flex; flex-direction:column;
+  position:relative;
+}
+.model-card .mc-head{
+  display:flex; align-items:center; gap:14px;
+  padding:16px 18px; border-bottom:1px solid var(--border);
+  background:var(--paper-dim);
+}
+.mc-diagram{
+  width:58px; height:58px; flex:none;
+  border:1px solid var(--border); background:var(--blueprint);
+  display:grid; place-items:center;
+}
+.mc-diagram svg{ width:42px; height:42px; stroke:var(--line); }
+.mc-head-text .mc-eyebrow{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.1em;
+  color:var(--accent); text-transform:uppercase; display:block; margin-bottom:3px;
+}
+.mc-head-text h3{
+  font-family:var(--font-display); font-size:1.12rem; margin:0; color:var(--blueprint); font-weight:600;
+}
+.mc-body{ padding:18px; flex:1; display:flex; flex-direction:column; gap:14px; }
+.mc-body p{ margin:0; font-size:.95rem; color:var(--ink-soft); }
+.mc-body p strong{ color:var(--ink); }
+
+.mc-pros-cons{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.pc-block h5{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+  margin:0 0 6px;
+}
+.pc-block.pros h5{ color:var(--ok); }
+.pc-block.cons h5{ color:var(--warn); }
+.pc-block ul{ margin:0; padding-left:16px; font-size:.86rem; color:var(--ink-soft); }
+.pc-block li{ margin-bottom:4px; }
+
+.mc-usecase{
+  font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft);
+  border-top:1px dashed var(--border); padding-top:12px;
+}
+.mc-usecase strong{ color:var(--blueprint); font-weight:600; }
+
+/* =========================================================================
+   TABLA COMPARATIVA
+   ========================================================================= */
+.table-wrap{ overflow-x:auto; border:1px solid var(--ink); margin-top:10px; }
+table.compare{
+  width:100%; border-collapse:collapse; min-width:760px;
+  font-size:.92rem; background:var(--paper);
+}
+table.compare th, table.compare td{
+  border-bottom:1px solid var(--border);
+  border-right:1px solid var(--border);
+  padding:12px 14px; text-align:left; vertical-align:top;
+}
+table.compare th:last-child, table.compare td:last-child{ border-right:none; }
+table.compare thead th{
+  background:var(--blueprint); color:#eef4f8;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  font-weight:600;
+}
+table.compare tbody tr:nth-child(even){ background:var(--paper-dim); }
+table.compare td strong{ color:var(--blueprint); }
+
+/* =========================================================================
+   CONCLUSIONES
+   ========================================================================= */
+.conclusion-box{
+  border:1.5px solid var(--blueprint);
+  background:var(--paper); padding:30px 30px;
+  position:relative; margin-top:10px;
+}
+.conclusion-box::before{
+  content:"N."; position:absolute; top:-13px; left:22px; background:var(--paper);
+  padding:0 8px; font-family:var(--font-mono); color:var(--accent); font-size:12px; letter-spacing:.08em;
+}
+
+/* =========================================================================
+   REFERENCIAS APA
+   ========================================================================= */
+.refs{ margin-top:10px; }
+.refs ol{ list-style:none; margin:0; padding:0; counter-reset:refc; }
+.refs li{
+  counter-increment:refc;
+  padding:14px 0 14px 0;
+  border-bottom:1px solid var(--border);
+  font-size:.95rem; color:var(--ink-soft);
+  padding-left:2.4em; text-indent:-2.4em; /* sangría francesa */
+  max-width:80ch;
+}
+.refs li::before{
+  content:"[" counter(refc) "]";
+  font-family:var(--font-mono); color:var(--accent); margin-right:.6em;
+}
+.refs a{ color:var(--blueprint); word-break:break-word; }
+
+/* =========================================================================
+   FOOTER
+   ========================================================================= */
+footer.site-footer{
+  background:var(--blueprint-2); color:#c7d9e5;
+  padding:40px 0 26px;
+  border-top:6px solid var(--accent);
+}
+.footer-grid{
+  display:grid; grid-template-columns:2fr 1fr 1fr; gap:30px;
+  font-family:var(--font-mono); font-size:12.5px;
+}
+@media (max-width:760px){ .footer-grid{ grid-template-columns:1fr; } }
+.footer-grid h6{
+  color:#eef4f8; text-transform:uppercase; letter-spacing:.1em; font-size:11px; margin:0 0 12px;
+}
+.footer-grid p, .footer-grid li{ color:#9fb7c8; line-height:1.8; margin:0; }
+.footer-grid ul{ list-style:none; padding:0; margin:0; }
+.footer-bottom{
+  margin-top:30px; padding-top:20px; border-top:1px solid rgba(111,176,214,0.25);
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  font-family:var(--font-mono); font-size:11px; color:#7f9baf;
+}
+
+/* ---- Utilidades / animación de aparición ---- */
+.reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease; }
+.reveal.in{ opacity:1; transform:none; }
+
+.skip-link{
+  position:absolute; left:-999px; top:0; background:var(--ink); color:#fff;
+  padding:10px 16px; z-index:100; font-family:var(--font-mono); font-size:13px;
+}
+.skip-link:focus{ left:12px; top:12px; }
